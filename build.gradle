@@ -11,6 +11,10 @@ java {
     sourceCompatibility = '21'
 }
 
+ext {
+    aws_sdk_version = '1.12.634'
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -22,6 +26,7 @@ repositories {
 }
 
 dependencies {
+    implementation "com.amazonaws:aws-java-sdk:$aws_sdk_version"
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
