@@ -26,4 +26,3 @@ create table bids(
                      auction_id bigint not null references auctions(id)
 );
 
-
