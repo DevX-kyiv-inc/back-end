@@ -1,5 +1,11 @@
 package com.acheron.devx.handler;
 
+import com.acheron.devx.dto.BidSaveDto;
+import com.acheron.devx.dto.MessageSaveDto;
+import com.acheron.devx.entity.Bid;
+import com.acheron.devx.entity.Message;
+import com.acheron.devx.service.BidService;
+import com.acheron.devx.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -10,17 +16,18 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class MainHandler {
-//    private final ChatRepository chatRepository;
-//
-//    @MessageMapping("/app/chat/{id}")
-//    @SendTo("/topic/chat/{id}")
-//    public String chatHandler(@Payload String str, @DestinationVariable Long id){
-//        return chatRepository.findById(id);
-//    }
+    private final MessageService messageService;
+    private final BidService bidService;
 
-    @MessageMapping("/app/slot/{id}")
-    @SendTo("/topic/slot/{id}")
-    public String slotHandler(@Payload String str, @DestinationVariable Long id){
-        return str;
+    @MessageMapping("/app/chat/{id}")
+    @SendTo("/topic/chat/{id}")
+    public Bid chatHandler(@Payload BidSaveDto dto, @DestinationVariable Long id){
+        return bidService.saveBid(dto,id);
+    }
+
+    @MessageMapping("/app/messages/{id}")
+    @SendTo("/topic/messages/{id}")
+    public Message messageHandler(@Payload MessageSaveDto str, @DestinationVariable Long id){
+        return messageService.save(str,id);
     }
 }

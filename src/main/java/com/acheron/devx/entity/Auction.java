@@ -33,4 +33,6 @@ public class Auction {
     private Double fundStake;
     @OneToMany(mappedBy = "auction")
     private List<Bid> bidList;
+    @OneToMany(mappedBy = "auction")
+    private List<Message> messages;
 }

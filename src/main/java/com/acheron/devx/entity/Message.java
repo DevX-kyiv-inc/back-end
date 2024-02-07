@@ -1,10 +1,10 @@
 package com.acheron.devx.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,4 +16,11 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String message;
+    private String sender;
+    @ManyToOne
+    @JoinColumn(name = "auction_id")
+    @JsonIgnore
+    private Auction auction;
+
 }

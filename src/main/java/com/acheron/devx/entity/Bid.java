@@ -1,5 +1,6 @@
 package com.acheron.devx.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +18,7 @@ public class Bid {
     private String bidderName;
     private Double amount;
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "auction_id")
     private Auction auction;
 }
