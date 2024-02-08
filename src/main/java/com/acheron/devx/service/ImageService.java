@@ -18,11 +18,11 @@ public class ImageService {
     private final AmazonS3 s3;
 
     @SneakyThrows
-    public String saveImage(MultipartFile file, Long id){
+    public String saveImage(MultipartFile file){
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(file.getContentType());
         objectMetadata.setContentLength(file.getSize());
-        String path=UUID.randomUUID()+file.getOriginalFilename();
+        String path=UUID.randomUUID()+String.valueOf(System.currentTimeMillis())+file.getOriginalFilename();
         PutObjectRequest request = new PutObjectRequest("devx-int20h",path , file.getInputStream(), objectMetadata);
         PutObjectResult putObjectResult = s3.putObject(request);
         System.out.println(putObjectResult.getContentMd5());

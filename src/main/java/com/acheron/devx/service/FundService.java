@@ -5,6 +5,7 @@ import com.acheron.devx.repository.FundRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,5 +16,8 @@ public class FundService {
     public Optional<Fund> findById(Long id){
         System.out.println(id);
         return fundRepository.findById(id);
+    }
+    public List<Fund> findAll(){
+        return fundRepository.findAll();
     }
 }

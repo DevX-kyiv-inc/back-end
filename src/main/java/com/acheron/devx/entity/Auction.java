@@ -22,12 +22,16 @@ public class Auction {
     private String name;
     private String description;
     private String photo;
-    @Column(name="author_name")
+    @Column(name = "author_name")
     private String authorName;
     private String contact;
     @Column(name = "expire_time")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime expireTime;
+    @Column(name = "start_time")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime startTime;
+    private Integer status;
     @OneToOne
     @JoinColumn(name = "fund_id")
     private Fund fund;
