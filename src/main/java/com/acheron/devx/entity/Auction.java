@@ -1,5 +1,6 @@
 package com.acheron.devx.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,6 +14,7 @@ import java.util.List;
 @ToString
 @Entity
 @Builder
+@Table(name = "auctions")
 public class Auction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +33,12 @@ public class Auction {
     private Fund fund;
     @Column(name = "fund_stake")
     private Double fundStake;
+    @Column(name = "start_value")
+    private Long startValue;
     @OneToMany(mappedBy = "auction")
+    @JsonIgnore
     private List<Bid> bidList;
     @OneToMany(mappedBy = "auction")
+    @JsonIgnore
     private List<Message> messages;
 }

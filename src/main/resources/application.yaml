@@ -7,7 +7,6 @@ spring:
 
 aws:
   region: eu-north-1
-  access_key: AKIA5Q2A6DOFL2PUM7NX
-  secret_access_key: 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
+  access_key: AKIA5Q2A6DOFL6W4K37Z
+  secret_access_key: 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
   bucket_name: devx-int20h
-  path_to_images: /auction

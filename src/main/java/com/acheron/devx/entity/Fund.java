@@ -1,9 +1,6 @@
 package com.acheron.devx.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Data
@@ -12,6 +9,7 @@ import lombok.*;
 @ToString
 @Entity
 @Builder
+@Table(name = "funds")
 public class Fund {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

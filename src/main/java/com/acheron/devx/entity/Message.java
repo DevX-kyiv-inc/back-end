@@ -20,7 +20,6 @@ public class Message {
     private String sender;
     @ManyToOne
     @JoinColumn(name = "auction_id")
-    @JsonIgnore
     private Auction auction;
 
 }

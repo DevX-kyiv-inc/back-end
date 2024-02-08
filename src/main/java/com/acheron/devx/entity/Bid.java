@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @Entity
+@Table(name = "bids")
 @Builder
 public class Bid {
     @Id
