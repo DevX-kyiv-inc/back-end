@@ -2,9 +2,11 @@ package com.acheron.devx.controller;
 
 import com.acheron.devx.dto.AuctionSaveDto;
 import com.acheron.devx.entity.Auction;
+import com.acheron.devx.entity.Bid;
 import com.acheron.devx.entity.Fund;
 import com.acheron.devx.entity.Message;
 import com.acheron.devx.service.AuctionService;
+import com.acheron.devx.service.BidService;
 import com.acheron.devx.service.FundService;
 import com.acheron.devx.service.MessageService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,13 +25,19 @@ public class MainController {
     private final AuctionService auctionService;
     private final FundService fundService;
     private final MessageService messageService;
+    private final BidService bidService;
 
     //get
-//    @RequestParam String key, @RequestParam Integer size
+
     @GetMapping("/allAuctions")
     @CrossOrigin("http://localhost:5173/")
-    public List<Auction> getAllAuctions() {
-        return auctionService.findAll();
+    public List<Auction> getAllAuctions(@RequestParam(required = false) String key, @RequestParam(required = false) Integer size,@RequestParam(required = false) Boolean isClosed, @RequestParam(required = false) Boolean sort) {
+        return auctionService.findAll(key, size, isClosed, sort);
+    }
+    @GetMapping("/allBids/{id}")
+    @CrossOrigin("http://localhost:5173/")
+    public List<Bid> findAll(@PathVariable Long id){
+        return bidService.findAll(id);
     }
 
     @GetMapping("/funds")

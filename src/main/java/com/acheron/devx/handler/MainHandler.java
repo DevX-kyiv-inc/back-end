@@ -19,9 +19,9 @@ public class MainHandler {
     private final MessageService messageService;
     private final BidService bidService;
 
-    @MessageMapping("/app/chat/{id}")
-    @SendTo("/topic/chat/{id}")
-    public Bid chatHandler(@Payload BidSaveDto dto, @DestinationVariable Long id){
+    @MessageMapping("/app/bid/{id}")
+    @SendTo("/topic/bid/{id}")
+    public Bid bidHandler(@Payload BidSaveDto dto, @DestinationVariable Long id){
         return bidService.saveBid(dto,id);
     }
 

@@ -1,12 +1,22 @@
 package com.acheron.devx.service;
 
 import com.acheron.devx.dto.AuctionSaveDto;
+import com.acheron.devx.dto.MessageSaveDto;
 import com.acheron.devx.entity.Auction;
+import com.acheron.devx.entity.Message;
 import com.acheron.devx.repository.AuctionRepository;
 import com.amazonaws.services.mq.model.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.apache.coyote.Response;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,9 +31,11 @@ public class AuctionService {
     private final AuctionRepository auctionRepository;
     private final FundService fundService;
     private final ImageService imageService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public List<Auction> findAll(String key, Integer size){
-        return auctionRepository.findAll(key, Pageable.ofSize(size));
+    public List<Auction> findAll(String key, Integer size,Boolean isClosed,Boolean sort){
+        Pageable pageable = PageRequest.of(0, size==null?40:size, sort == null ? Sort.by(Sort.Direction.DESC, "startTime","status") : Sort.unsorted());
+        return auctionRepository.findAll(key==null?"":key,isClosed==null?0:1, pageable);
     }
     public List<Auction> findAll(){
         return auctionRepository.findAll();
@@ -59,7 +71,7 @@ public class AuctionService {
     private void delay(Auction auction){
         Thread.sleep(Duration.between(auction.getStartTime(), auction.getExpireTime()));
         auction.setStatus(0);
-        auctionRepository.save(auction);
+        Auction save = auctionRepository.save(auction);
+        simpMessagingTemplate.convertAndSend("/topic/auction/"+save.getId(),"pizda");
     }
-
 }

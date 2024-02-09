@@ -12,4 +12,5 @@ import lombok.ToString;
 public class MessageSaveDto {
     private String sender;
     private String message;
+    private String color;
 }

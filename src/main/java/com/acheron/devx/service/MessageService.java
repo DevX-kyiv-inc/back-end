@@ -15,7 +15,7 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final AuctionService auctionService;
     public Message save(MessageSaveDto saveDto, Long id) {
-        return messageRepository.save(new Message(null,saveDto.getMessage(), saveDto.getSender(), auctionService.findById(id).orElseThrow(()-> new NotFoundException("user not found"))));
+        return messageRepository.save(new Message(null,saveDto.getMessage(), saveDto.getSender(),saveDto.getColor(), auctionService.findById(id).orElseThrow(()-> new NotFoundException("user not found"))));
     }
     public List<Message> findAll(Long id){
         return messageRepository.findAll(id);
