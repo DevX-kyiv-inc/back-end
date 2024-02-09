@@ -31,8 +31,12 @@ public class MainController {
 
     @GetMapping("/allAuctions")
     @CrossOrigin("http://localhost:5173/")
-    public List<Auction> getAllAuctions(@RequestParam(required = false) String key, @RequestParam(required = false) Integer size,@RequestParam(required = false) Boolean isClosed, @RequestParam(required = false) Boolean sort) {
-        return auctionService.findAll(key, size, isClosed, sort);
+    public List<Auction> getAllAuctions(@RequestParam(required = false) String key, @RequestParam(required = false) Integer size,@RequestParam(required = false) Integer status, @RequestParam(required = false) String sort) {
+        System.out.println(key);
+        System.out.println(size);
+        System.out.println(status);
+        System.out.println(sort);
+        return auctionService.findAll(key, size, status, sort);
     }
     @GetMapping("/allBids/{id}")
     @CrossOrigin("http://localhost:5173/")

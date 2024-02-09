@@ -10,3 +10,11 @@ aws:
   access_key: AKIA5Q2A6DOFL6W4K37Z
   secret_access_key: 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
   bucket_name: devx-int20h
+
+jwt:
+  secret: YXNkc2Fkc2Fkc2Fka2JzYWpoZHZoYWxzZmFzZnNmc2RmYWZk
+  lifetime: 20m
+#
+#logging:
+#  level:
+#    root: debug

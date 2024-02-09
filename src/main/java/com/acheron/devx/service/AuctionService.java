@@ -1,6 +1,7 @@
 package com.acheron.devx.service;
 
 import com.acheron.devx.dto.AuctionSaveDto;
+import com.acheron.devx.dto.BidSendDto;
 import com.acheron.devx.dto.MessageSaveDto;
 import com.acheron.devx.entity.Auction;
 import com.acheron.devx.entity.Message;
@@ -33,9 +34,9 @@ public class AuctionService {
     private final ImageService imageService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public List<Auction> findAll(String key, Integer size,Boolean isClosed,Boolean sort){
-        Pageable pageable = PageRequest.of(0, size==null?40:size, sort == null ? Sort.by(Sort.Direction.DESC, "startTime","status") : Sort.unsorted());
-        return auctionRepository.findAll(key==null?"":key,isClosed==null?0:1, pageable);
+    public List<Auction> findAll(String key, Integer size,Integer status,String sort){
+        Pageable pageable = PageRequest.of(0, size==null?40:size, sort.equals("old") ? Sort.by(Sort.Direction.ASC, "startTime","status") :Sort.by(Sort.Direction.DESC, "startTime","status"));
+        return auctionRepository.findAll(key==null?"":key,status==1?1:0, pageable);
     }
     public List<Auction> findAll(){
         return auctionRepository.findAll();
@@ -72,6 +73,7 @@ public class AuctionService {
         Thread.sleep(Duration.between(auction.getStartTime(), auction.getExpireTime()));
         auction.setStatus(0);
         Auction save = auctionRepository.save(auction);
-        simpMessagingTemplate.convertAndSend("/topic/auction/"+save.getId(),"pizda");
+        System.out.println("norm");
+        simpMessagingTemplate.convertAndSend("/topic/bid/"+save.getId(),new BidSendDto("",1D,0));
     }
 }
