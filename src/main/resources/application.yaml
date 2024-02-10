@@ -13,8 +13,8 @@ aws:
 
 jwt:
   secret: YXNkc2Fkc2Fkc2Fka2JzYWpoZHZoYWxzZmFzZnNmc2RmYWZk
-  lifetime: 20m
-#
+  lifetime: 262980m
+
 #logging:
 #  level:
 #    root: debug

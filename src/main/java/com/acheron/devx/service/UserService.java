@@ -22,12 +22,6 @@ public class UserService implements UserDetailsService {
         return userRepo.findByUsername(username);
     }
 
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        User user = userRepo.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Not found"));
-//        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), Collections.singleton(user.getRole()));
-//    }
-
     public User save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);

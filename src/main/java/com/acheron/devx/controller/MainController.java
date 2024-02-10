@@ -32,11 +32,12 @@ public class MainController {
     @GetMapping("/allAuctions")
     @CrossOrigin("http://localhost:5173/")
     public List<Auction> getAllAuctions(@RequestParam(required = false) String key, @RequestParam(required = false) Integer size,@RequestParam(required = false) Integer status, @RequestParam(required = false) String sort) {
-        System.out.println(key);
-        System.out.println(size);
-        System.out.println(status);
-        System.out.println(sort);
         return auctionService.findAll(key, size, status, sort);
+    }
+    @GetMapping("/currentBid/{id}")
+    @CrossOrigin("http://localhost:5173/")
+    public Bid getCurrentBid(@PathVariable Long id) {
+        return bidService.findCurrent(id).orElse(null);
     }
     @GetMapping("/allBids/{id}")
     @CrossOrigin("http://localhost:5173/")
@@ -75,11 +76,6 @@ public class MainController {
                 Double.valueOf(request.getHeader("fundPercentage")),
                 Long.valueOf(request.getHeader("price"))
         );
-
-        System.out.println(dto.getExpireTime());
-        System.out.println(Long.valueOf(request.getHeader("fund")));
-        System.out.println(dto);
-        System.out.println(file.getOriginalFilename());
         return auctionService.save(dto, file);
     }
 }

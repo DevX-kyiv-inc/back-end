@@ -14,8 +14,10 @@ public class FundService {
     private final FundRepository fundRepository;
 
     public Optional<Fund> findById(Long id){
-        System.out.println(id);
         return fundRepository.findById(id);
+    }
+    public Fund save(Fund fund){
+        return fundRepository.save(fund);
     }
     public List<Fund> findAll(){
         return fundRepository.findAll();

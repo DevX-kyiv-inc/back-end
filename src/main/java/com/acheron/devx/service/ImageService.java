@@ -25,8 +25,6 @@ public class ImageService {
         String path=UUID.randomUUID()+String.valueOf(System.currentTimeMillis())+file.getOriginalFilename();
         PutObjectRequest request = new PutObjectRequest("devx-int20h",path , file.getInputStream(), objectMetadata);
         PutObjectResult putObjectResult = s3.putObject(request);
-        System.out.println(putObjectResult.getContentMd5());
-        System.out.println(putObjectResult);
         String presignedUrl = s3.getUrl("devx-int20h",path).toString();
         return presignedUrl;
     }

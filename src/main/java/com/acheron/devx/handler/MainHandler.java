@@ -27,12 +27,14 @@ public class MainHandler {
     @SendTo("/topic/bid/{id}")
     public BidSendDto bidHandler(@Payload BidSaveDto dto, @DestinationVariable Long id) {
         Bid bid = bidService.saveBid(dto, id);
-        return new BidSendDto(bid.getBidderName(), bid.getAmount(),1);
+        System.out.println("ws: bid: " + dto);
+        return new BidSendDto(bid.getBidderName(), bid.getAmount(),auctionService.findById(id).get().getStatus());
     }
 
     @MessageMapping("/app/messages/{id}")
     @SendTo("/topic/messages/{id}")
     public Message messageHandler(@Payload MessageSaveDto str, @DestinationVariable Long id) {
+        System.out.println("ws: auction" + str);
         return messageService.save(str, id);
     }
 

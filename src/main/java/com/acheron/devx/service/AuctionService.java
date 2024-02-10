@@ -4,12 +4,16 @@ import com.acheron.devx.dto.AuctionSaveDto;
 import com.acheron.devx.dto.BidSendDto;
 import com.acheron.devx.dto.MessageSaveDto;
 import com.acheron.devx.entity.Auction;
+import com.acheron.devx.entity.Bid;
+import com.acheron.devx.entity.Fund;
 import com.acheron.devx.entity.Message;
 import com.acheron.devx.repository.AuctionRepository;
-import com.amazonaws.services.mq.model.NotFoundException;
+
+import com.acheron.devx.repository.BidRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.coyote.Response;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -33,6 +37,7 @@ public class AuctionService {
     private final FundService fundService;
     private final ImageService imageService;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final BidRepository bidService;
 
     public List<Auction> findAll(String key, Integer size,Integer status,String sort){
         Pageable pageable = PageRequest.of(0, size==null?40:size, sort.equals("old") ? Sort.by(Sort.Direction.ASC, "startTime","status") :Sort.by(Sort.Direction.DESC, "startTime","status"));
@@ -45,6 +50,7 @@ public class AuctionService {
         return auctionRepository.findById(id);
     }
 
+    @SneakyThrows
     public Auction save(AuctionSaveDto auctionDto, MultipartFile file){
         Auction auction = new Auction(
                 null,
@@ -56,7 +62,7 @@ public class AuctionService {
                 LocalDateTime.now().plusMinutes((long) auctionDto.getExpireTime()),
                 LocalDateTime.now(),
                 1,
-                fundService.findById(auctionDto.getFundId()).orElseThrow(()-> new NotFoundException("fund not")),
+                fundService.findById(auctionDto.getFundId()).orElseThrow(ChangeSetPersister.NotFoundException::new),
                 auctionDto.getFundStake(),
                 auctionDto.getStartValue(),
                 null,
@@ -72,8 +78,18 @@ public class AuctionService {
     private void delay(Auction auction){
         Thread.sleep(Duration.between(auction.getStartTime(), auction.getExpireTime()));
         auction.setStatus(0);
+
         Auction save = auctionRepository.save(auction);
-        System.out.println("norm");
+        Fund fund = auction.getFund();
+        Bid bid = bidService.findCurrent(auction.getId()).orElse(null);
+        Double d;
+        if(bid == null){
+            d=0D;
+        }else {
+            d= bidService.findCurrent(auction.getId()).get().getAmount();
+        }
+        fund.setValue(d*auction.getFundStake()*0.01);
+        fundService.save(auction.getFund());
         simpMessagingTemplate.convertAndSend("/topic/bid/"+save.getId(),new BidSendDto("",1D,0));
     }
 }
