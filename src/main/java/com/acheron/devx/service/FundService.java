@@ -13,13 +13,15 @@ import java.util.Optional;
 public class FundService {
     private final FundRepository fundRepository;
 
-    public Optional<Fund> findById(Long id){
+    public Optional<Fund> findById(Long id) {
         return fundRepository.findById(id);
     }
-    public Fund save(Fund fund){
+
+    public Fund save(Fund fund) {
         return fundRepository.save(fund);
     }
-    public List<Fund> findAll(){
+
+    public List<Fund> findAll() {
         return fundRepository.findAll();
     }
 }

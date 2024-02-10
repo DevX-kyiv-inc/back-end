@@ -35,9 +35,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenUtils.getUsername(jwt);
             } catch (ExpiredJwtException e) {
-                log.debug("не той нік");
+                log.debug("Incorrect nickname");
             } catch (SignatureException e) {
-                log.debug("не той підпис");
+                log.debug("Incorrect signature");
             }
         }
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +17,7 @@ public class Message {
     private String message;
     private String sender;
     private String color;
+
     @ManyToOne
     @JoinColumn(name = "auction_id")
     @JsonIgnore

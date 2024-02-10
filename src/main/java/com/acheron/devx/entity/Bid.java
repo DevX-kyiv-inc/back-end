@@ -15,9 +15,11 @@ public class Bid {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "bidder_name")
     private String bidderName;
     private Double amount;
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "auction_id")

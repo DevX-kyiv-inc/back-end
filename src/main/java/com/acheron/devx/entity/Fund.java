@@ -15,5 +15,5 @@ public class Fund {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private Double value; //Float
+    private Double value;
 }

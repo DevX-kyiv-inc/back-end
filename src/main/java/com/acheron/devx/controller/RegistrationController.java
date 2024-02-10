@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class RegistrationController {
     private final UserService usersService;
     private final JwtTokenUtils tokenUtils;
+
     @PostMapping("/registration")
-    public String regPost(@RequestBody RegistrationDto dto){
+    public String regPost(@RequestBody RegistrationDto dto) {
 
         User save = usersService.save(new User(
                 null,

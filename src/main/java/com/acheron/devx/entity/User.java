@@ -17,9 +17,11 @@ public class User {
     private Long id;
     private String username;
     private String email;
+
     @ToString.Exclude
     private String password;
     private String image;
+
     @Enumerated(value = EnumType.STRING)
     private Role role;
 }

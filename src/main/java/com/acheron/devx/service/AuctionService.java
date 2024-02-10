@@ -2,25 +2,17 @@ package com.acheron.devx.service;
 
 import com.acheron.devx.dto.AuctionSaveDto;
 import com.acheron.devx.dto.BidSendDto;
-import com.acheron.devx.dto.MessageSaveDto;
 import com.acheron.devx.entity.Auction;
 import com.acheron.devx.entity.Bid;
 import com.acheron.devx.entity.Fund;
-import com.acheron.devx.entity.Message;
 import com.acheron.devx.repository.AuctionRepository;
-
 import com.acheron.devx.repository.BidRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.apache.coyote.Response;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,19 +31,21 @@ public class AuctionService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final BidRepository bidService;
 
-    public List<Auction> findAll(String key, Integer size,Integer status,String sort){
-        Pageable pageable = PageRequest.of(0, size==null?40:size, sort.equals("old") ? Sort.by(Sort.Direction.ASC, "startTime","status") :Sort.by(Sort.Direction.DESC, "startTime","status"));
-        return auctionRepository.findAll(key==null?"":key,status==1?1:0, pageable);
+    public List<Auction> findAll(String key, Integer size, Integer status, String sort) {
+        Pageable pageable = PageRequest.of(0, size == null ? 40 : size, sort.equals("old") ? Sort.by(Sort.Direction.ASC, "startTime", "status") : Sort.by(Sort.Direction.DESC, "startTime", "status"));
+        return auctionRepository.findAll(key == null ? "" : key, status == 1 ? 1 : 0, pageable);
     }
-    public List<Auction> findAll(){
+
+    public List<Auction> findAll() {
         return auctionRepository.findAll();
     }
-    public Optional<Auction> findById(Long id){
+
+    public Optional<Auction> findById(Long id) {
         return auctionRepository.findById(id);
     }
 
     @SneakyThrows
-    public Auction save(AuctionSaveDto auctionDto, MultipartFile file){
+    public Auction save(AuctionSaveDto auctionDto, MultipartFile file) {
         Auction auction = new Auction(
                 null,
                 auctionDto.getName(),
@@ -75,7 +69,7 @@ public class AuctionService {
     }
 
     @SneakyThrows
-    private void delay(Auction auction){
+    private void delay(Auction auction) {
         Thread.sleep(Duration.between(auction.getStartTime(), auction.getExpireTime()));
         auction.setStatus(0);
 
@@ -83,13 +77,13 @@ public class AuctionService {
         Fund fund = auction.getFund();
         Bid bid = bidService.findCurrent(auction.getId()).orElse(null);
         Double d;
-        if(bid == null){
-            d=0D;
-        }else {
-            d= bidService.findCurrent(auction.getId()).get().getAmount();
+        if (bid == null) {
+            d = 0D;
+        } else {
+            d = bidService.findCurrent(auction.getId()).get().getAmount();
         }
-        fund.setValue(d*auction.getFundStake()*0.01);
+        fund.setValue(d * auction.getFundStake() * 0.01);
         fundService.save(auction.getFund());
-        simpMessagingTemplate.convertAndSend("/topic/bid/"+save.getId(),new BidSendDto("",1D,0));
+        simpMessagingTemplate.convertAndSend("/topic/bid/" + save.getId(), new BidSendDto("", 0D, 0));
     }
 }

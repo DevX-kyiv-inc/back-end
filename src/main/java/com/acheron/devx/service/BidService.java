@@ -16,14 +16,16 @@ public class BidService {
     private final BidRepository bidRepository;
     private final AuctionService auctionService;
 
-    public Bid saveBid(BidSaveDto saveDto, Long id){
-        return bidRepository.save(new Bid(null,saveDto.getName(), saveDto.getValue(), auctionService.findById(id).orElseThrow(()-> new RuntimeException("user not found"))));
+    public Bid saveBid(BidSaveDto saveDto, Long id) {
+        return bidRepository.save(new Bid(null, saveDto.getName(), saveDto.getValue(), auctionService.findById(id).orElseThrow(() -> new RuntimeException("user not found"))));
     }
-    public Optional<Bid> findCurrent(Long id){
+
+    public Optional<Bid> findCurrent(Long id) {
         return bidRepository.findCurrent(id);
     }
-    public List<Bid> findAll(Long id){
-        return bidRepository.findAll(id,Sort.by("amount"));
+
+    public List<Bid> findAll(Long id) {
+        return bidRepository.findAll(id, Sort.by("amount"));
     }
 
 }
