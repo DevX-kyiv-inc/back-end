@@ -21,7 +21,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v2")
-@CrossOrigin(origins = "http://localhost:5137/")
+@CrossOrigin(origins = "http://localhost:5173/")
 public class MainController {
     private final AuctionService auctionService;
     private final FundService fundService;
@@ -31,55 +31,61 @@ public class MainController {
     //get
 
     @GetMapping("/allAuctions")
-    @CrossOrigin(origins = { "http://charitx.surge.sh/", "http://charitx1.surge.sh/"})
+    @CrossOrigin(origins = { "http://charitx.surge.sh/", "http://charitx1.surge.sh/","http://localhost:5173/"})
     public List<Auction> getAllAuctions(@RequestParam(required = false) String key, @RequestParam(required = false) Integer size, @RequestParam(required = false) Integer status, @RequestParam(required = false) String sort) {
         return auctionService.findAll(key, size, status, sort);
     }
 
     @GetMapping("/currentBid/{id}")
-    @CrossOrigin(origins = { "http://charitx.surge.sh/", "http://charitx1.surge.sh/"})
+    @CrossOrigin(origins = { "http://charitx.surge.sh/", "http://charitx1.surge.sh/","http://localhost:5173/"})
     public Bid getCurrentBid(@PathVariable Long id) {
         return bidService.findCurrent(id).orElse(null);
     }
 
     @GetMapping("/allBids/{id}")
-    @CrossOrigin(origins = { "http://charitx.surge.sh/", "http://charitx1.surge.sh/"})
+    @CrossOrigin(origins = { "http://charitx.surge.sh/", "http://charitx1.surge.sh/","http://localhost:5173/"})
     public List<Bid> findAll(@PathVariable Long id) {
         return bidService.findAll(id);
     }
 
     @GetMapping("/funds")
-    @CrossOrigin(origins = { "http://charitx.surge.sh/", "http://charitx1.surge.sh/"})
+    @CrossOrigin(origins = { "http://charitx.surge.sh/", "http://charitx1.surge.sh/","http://localhost:5173/"})
     public List<Fund> getAllFunds() {
         return fundService.findAll();
     }
 
     @GetMapping("/messages/{id}")
-    @CrossOrigin(origins = { "http://charitx.surge.sh/", "http://charitx1.surge.sh/"})
+    @CrossOrigin(origins = { "http://charitx.surge.sh/", "http://charitx1.surge.sh/","http://localhost:5173/"})
     public List<Message> getAllMessages(@PathVariable Long id) {
         return messageService.findAll(id);
     }
 
     @GetMapping("/auction/{id}")
-    @CrossOrigin(origins = { "http://charitx.surge.sh/", "http://charitx1.surge.sh/"})
+    @CrossOrigin(origins = { "http://charitx.surge.sh/", "http://charitx1.surge.sh/","http://localhost:5173/"})
     public ResponseEntity<Auction> findAuction(@PathVariable Long id) {
         return auctionService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     //post
-    @CrossOrigin(origins = { "http://charitx.surge.sh/", "http://charitx1.surge.sh/"})
+    @CrossOrigin(origins = { "http://charitx.surge.sh/", "http://charitx1.surge.sh/","http://localhost:5173/"})
     @PostMapping("/saveAuction")
-    public Auction saveAuction(HttpServletRequest request, @RequestParam MultipartFile file) {
-        AuctionSaveDto dto = new AuctionSaveDto(
-                request.getHeader("name"),
-                request.getHeader("desc"),
-                request.getHeader("authorName"),
-                request.getHeader("contact"),
-                Integer.valueOf(request.getHeader("expirationTime")),
-                Long.valueOf(request.getHeader("fund")),
-                Double.valueOf(request.getHeader("fundPercentage")),
-                Long.valueOf(request.getHeader("price"))
-        );
-        return auctionService.save(dto, file);
+    public ResponseEntity<Auction> saveAuction(AuctionSaveDto dto1,HttpServletRequest request, @RequestParam MultipartFile file) {
+        System.out.println(dto1);
+//        AuctionSaveDto dto = new AuctionSaveDto(
+//                request.getHeader("name"),
+//                request.getHeader("desc"),
+//                request.getHeader("authorName"),
+//                request.getHeader("contact"),
+//                Integer.valueOf(request.getHeader("expirationTime")),
+//                Long.valueOf(request.getHeader("fund")),
+//                Double.valueOf(request.getHeader("fundPercentage")),
+//                Long.valueOf(request.getHeader("price"))
+//        );
+        try{
+            Auction save = auctionService.save(dto1, file);
+            return ResponseEntity.ok(save);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

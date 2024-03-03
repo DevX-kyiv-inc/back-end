@@ -53,12 +53,12 @@ public class AuctionService {
                 null,
                 auctionDto.getAuthorName(),
                 auctionDto.getContact(),
-                LocalDateTime.now().plusMinutes((long) auctionDto.getExpireTime()),
+                LocalDateTime.now().plusMinutes((long) auctionDto.getExpirationTime()),
                 LocalDateTime.now(),
                 1,
-                fundService.findById(auctionDto.getFundId()).orElseThrow(ChangeSetPersister.NotFoundException::new),
-                auctionDto.getFundStake(),
-                auctionDto.getStartValue(),
+                fundService.findById(auctionDto.getFund()).orElseThrow(ChangeSetPersister.NotFoundException::new),
+                auctionDto.getFundPercentage(),
+                auctionDto.getPrice(),
                 null,
                 null
         );

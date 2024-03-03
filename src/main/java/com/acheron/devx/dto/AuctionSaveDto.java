@@ -16,8 +16,8 @@ public class AuctionSaveDto {
     private String authorName;
     private String contact;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Integer expireTime;
-    private Long fundId;
-    private Double fundStake;
-    private Long startValue;
+    private Integer expirationTime;
+    private Long fund;
+    private Double fundPercentage;
+    private Long price;
 }
